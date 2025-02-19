@@ -60,3 +60,12 @@ models/
 # Ignore Docker, if using
 docker-compose.override.yml
 .envrc
+
+# Ignore large data files
+data/*
+models/*
+__pycache__/
+*.pkl
+*.csv
+*.parquet
+*.h5
