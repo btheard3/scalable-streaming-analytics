@@ -56,7 +56,7 @@ models/
 *.pkl
 *.ckpt
 *.onnx
-
+!models/logistic_regression_tuned.pkl
 # Ignore Docker, if using
 docker-compose.override.yml
 .envrc
