@@ -6,7 +6,7 @@ This project aims to build a **real-time data pipeline** that ingests, processes
 
 ## 📂 Project Structure
 
-```
+```plaintext
 /scalable-streaming-analytics
     ├── notebooks/
     │   ├── 01_data_preprocessing.ipynb
