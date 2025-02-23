@@ -5,9 +5,10 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy application files from the correct path
-COPY scripts/api/app.py /app/  # Ensure app.py is placed inside /app/
-COPY models/logistic_regression_tuned.pkl /app/  # Place model in /app/
-COPY scripts/api/requirements.txt /app/  # Ensure requirements.txt is copied
+COPY scripts/api/app.py /app/   # Ensure app.py is placed inside /app/
+COPY models/logistic_regression_tuned.pkl /app/   # Place model in /app/
+COPY scripts/api/requirements.txt /app/   # Ensure requirements.txt is placed inside /app/
+
 
 # Install dependencies
 RUN pip install --no-cache-dir -r /app/requirements.txt
