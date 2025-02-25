@@ -5,18 +5,18 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy application files from the correct path
-COPY scripts/api/app.py /app/   # Ensure app.py is placed inside /app/
-COPY models/logistic_regression_tuned.pkl /app/   # Place model in /app/
-COPY scripts/api/requirements.txt /app/   # Ensure requirements.txt is placed inside /app/
-
+COPY scripts/api/app.py /app/
+COPY models/logistic_regression_tuned.pkl /app/
+COPY scripts/api/requirements.txt /app/
 
 # Install dependencies
-RUN pip install --no-cache-dir -r /app/requirements.txt
+RUN python3 -m pip install --upgrade pip && python3 -m pip install --no-cache-dir -r /app/requirements.txt
 
 # Expose API port
 EXPOSE 8080
 
 # Run the Flask API using Gunicorn
 CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
+
 
 
