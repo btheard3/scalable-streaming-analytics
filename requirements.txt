@@ -81,12 +81,12 @@ nbformat==5.10.4
 nest-asyncio==1.6.0
 notebook==7.3.2
 notebook_shim==0.2.4
-numpy==2.2.3
+numpy==1.23.5
 objsize==0.7.1
 orjson==3.10.15
 overrides==7.7.0
 packaging==24.2
-pandas==2.2.3
+pandas==1.5.3
 pandocfilters==1.5.1
 parso==0.8.4
 pillow==11.1.0
@@ -146,3 +146,4 @@ widgetsnbextension==4.0.13
 zstandard==0.23.0
 gunicorn
 werkzeug==2.2.2
+scipy==1.10.1

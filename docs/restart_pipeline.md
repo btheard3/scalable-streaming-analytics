@@ -1,4 +1,4 @@
-Steps to Restart the Data Pipeline
+# Steps to Restart the Data Pipeline
 
 1️⃣ Activate Google Cloud SDK & Authenticate
 If your Google Cloud CLI session has expired, re-authenticate:
