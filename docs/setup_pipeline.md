@@ -149,7 +149,7 @@ google*credentials.json
 *.key.json
 \_.pem
 
-# Ignore compiled files
+## Ignore compiled files
 
 _.so
 _.o
@@ -158,7 +158,7 @@ _.dll
 _.dylib
 _.lib
 
-# Ignore editor/IDE-specific files
+## Ignore editor/IDE-specific files
 
 .vscode/
 .idea/
@@ -170,7 +170,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 node_modules/
 
-# Ignore output files from experiments or ML models
+### Ignore output files from experiments or ML models
 
 models/
 _.h5
@@ -178,7 +178,7 @@ _.pkl
 _.ckpt
 _.onnx
 
-# Ignore Docker, if using
+## Ignore Docker, if using
 
 docker-compose.override.yml
 .envrc
