@@ -1,27 +1,33 @@
-# 📌 Scalable Streaming Analytics Project
+#📌 Scalable Streaming Analytics Project
 
-## 🎯 Project Overview
+🎯 Project Overview
+This project builds a real-time data pipeline that ingests, processes, and analyzes streaming events using Google Cloud Dataflow, BigQuery, and Machine Learning models. The goal is to generate insights from live event data, optimize feature selection, and train predictive models.
 
-This project aims to build a **real-time data pipeline** that ingests, processes, and analyzes streaming events using **Google Cloud Dataflow**, **BigQuery**, and **Machine Learning models**. The goal is to generate insights from live event data, optimize feature selection, and train predictive models.
+Additionally, Apache Airflow is used to orchestrate the pipeline.
 
 ## 📂 Project Structure
 
-```plaintext
+```
 /scalable-streaming-analytics
-    ├── notebooks/
+    ├── airflow/                     # Airflow DAGs & Config
+    │   ├── dags/
+    │   │   ├── data_ingestion_dag.py   # Ingests streaming data
+    │   │   ├── model_training_dag.py   # Trains ML models
+    │   │   ├── feature_engineering_dag.py  # Feature processing
+    │   ├── airflow.cfg               # Airflow configuration
+    ├── notebooks/                 # Jupyter Notebooks
     │   ├── 01_data_preprocessing.ipynb
     │   ├── 02_eda.ipynb
     │   ├── 03_feature_engineering.ipynb
     │   ├── 04_model_training.ipynb
     │   ├── 05_model_evaluation.ipynb
-    ├── data/ (ignored in .gitignore)
-    ├── models/ (ignored in .gitignore)
-    ├── scripts/
-    ├── restart_pipeline.md
-    ├── setup_pipeline.md
-    ├── requirements.txt
+    ├── scripts/                    # Additional Python scripts
+    ├── restart_pipeline.md          # Steps to restart Airflow & pipeline
+    ├── setup_pipeline.md            # Steps to configure the full pipeline
+    ├── requirements.txt              # Python dependencies
     ├── .gitignore
     ├── README.md
+
 ```
 
 ## 🚀 Steps to Set Up the Project
