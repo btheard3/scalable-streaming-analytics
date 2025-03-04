@@ -86,4 +86,48 @@ Refer to `restart_pipeline.md` for step-by-step instructions on restarting the p
 - Use `restart_pipeline.md` if the pipeline needs to be restarted after stopping.
 - Update `.gitignore` to prevent committing large files (datasets, models, etc.).
 
-**Next Steps:** ✅ Begin working on `01_data_preprocessing.ipynb`. 🎯
+🚀 1️⃣ Setup Instructions
+1️⃣ Install Dependencies
+Ensure you have the required Python packages installed:
+
+bash
+Copy
+Edit
+pip install -r requirements.txt
+2️⃣ Set Up & Start Apache Airflow
+Apache Airflow is used for orchestration of data pipelines.
+
+🔹 Initializing Airflow
+Run the following only the first time to initialize the Airflow database:
+
+bash
+Copy
+Edit
+export AIRFLOW_HOME=$(pwd)/airflow
+airflow db init
+🔹 Start Airflow Webserver & Scheduler
+To start the Airflow UI (on localhost:8080) and run DAGs, use:
+
+bash
+Copy
+Edit
+cd ~/scalable-streaming-analytics
+source venv/bin/activate # Activate virtual environment
+
+airflow webserver --port 8080 &
+airflow scheduler &
+Then visit http://localhost:8080.
+
+📌 2️⃣ Streaming Data Pipeline
+DAG: data_ingestion_dag.py
+📌 Purpose: Simulates a real-time data ingestion pipeline.
+
+How to Manually Run This DAG
+Open Airflow UI (localhost:8080)
+Find data_ingestion_dag
+Click ▶ (Trigger DAG)
+View logs:
+bash
+Copy
+Edit
+airflow tasks logs data_ingestion_dag simulate_ingestion
