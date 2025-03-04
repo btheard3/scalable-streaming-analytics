@@ -131,3 +131,27 @@ bash
 Copy
 Edit
 airflow tasks logs data_ingestion_dag simulate_ingestion
+
+3️⃣ Machine Learning Pipeline
+Steps
+Preprocess Data (01_data_preprocessing.ipynb)
+Perform EDA (02_eda.ipynb)
+Feature Engineering (03_feature_engineering.ipynb)
+Train Model (04_model_training.ipynb)
+Evaluate Model (05_model_evaluation.ipynb)
+Run the Jupyter Notebook
+bash
+Copy
+Edit
+jupyter notebook
+🔄 4️⃣ Restarting the Pipeline
+If the pipeline crashes or is stopped:
+
+bash
+Copy
+Edit
+pkill -f "airflow"
+source venv/bin/activate
+airflow db init
+airflow webserver --port 8080 &
+airflow scheduler &
