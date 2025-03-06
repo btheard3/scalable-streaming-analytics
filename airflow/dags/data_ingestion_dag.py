@@ -18,3 +18,5 @@ with DAG(
         task_id="simulate_ingestion",
         python_callable=simulate_data_ingestion
     )
+
+ingest_task
