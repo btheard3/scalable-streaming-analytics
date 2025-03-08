@@ -1,5 +1,6 @@
 from airflow import DAG
 from airflow.providers.google.cloud.operators.dataflow import DataflowTemplatedJobStartOperator
+from airflow.providers.google.cloud.hooks.dataflow import DataflowHook
 from datetime import datetime, timedelta
 
 # Set default arguments
