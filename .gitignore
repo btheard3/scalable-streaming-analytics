@@ -70,4 +70,5 @@ __pycache__/
 *.parquet
 *.h5
 
-google-chrome-stable_current_amd64.debgoogle-chrome-stable_current_amd64.deb
+google-chrome-stable_current_amd64.deb
+
