@@ -14,14 +14,14 @@ with DAG("bigquery_ml_training",
             "query": {
                 "query": """
                     CREATE OR REPLACE MODEL `scalable-streaming-analytics.streaming_data.user_behavior_model`
-                    OPTIONS(
-                        model_type='logistic_reg',
-                        input_label_cols=['event']  -- Explicitly defining the label column
-                    ) AS
+                    OPTIONS(model_type='logistic_reg') AS
                     SELECT 
                         user_id, 
                         content_id, 
-                        event 
+                        CASE 
+                            WHEN event = 'like' THEN 1
+                            WHEN event = 'watch' THEN 0
+                        END AS label  -- Explicitly defining the label column
                     FROM `scalable-streaming-analytics.streaming_data.events`
                     WHERE event IN ('like', 'watch');
                 """,
@@ -32,3 +32,4 @@ with DAG("bigquery_ml_training",
         gcp_conn_id="google_cloud_default",
         dag=dag,
     )
+
