@@ -1,26 +1,27 @@
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import json
+import logging
 
 # Define input Pub/Sub topic
-TOPIC = "projects/scalable-streaming-analytics/topics/streaming-events"
+TOPIC = "projects/scalable-streaming-analytics/topics/streaming-events-topic"
 
 # Define BigQuery output table
 BQ_TABLE = "scalable-streaming-analytics.streaming_data.processed_events"
 
 class ParseEventFn(beam.DoFn):
-    """Parses incoming Pub/Sub messages."""
     def process(self, element):
         try:
             data = json.loads(element.decode('utf-8'))
             yield {
                 "user_id": data.get("user_id"),
+                "event": data.get("event"),
                 "content_id": data.get("content_id"),
-                "event_type": data.get("event"),
-                "event_time": data.get("timestamp"),
+                "timestamp": data.get("timestamp")
             }
         except Exception as e:
-            print(f"Error parsing: {e}")
+            logging.error(f"Failed to process element: {element} | Error: {e}")
+
 
 def run():
     """Runs the Apache Beam pipeline."""
