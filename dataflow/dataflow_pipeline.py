@@ -1,15 +1,18 @@
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import json
-import logging
+import argparse
+from apache_beam.options.pipeline_options import StandardOptions
 
-# Define input Pub/Sub topic
+# Define Pub/Sub topic
 TOPIC = "projects/scalable-streaming-analytics/topics/streaming-events-topic"
+
 
 # Define BigQuery output table
 BQ_TABLE = "scalable-streaming-analytics.streaming_data.processed_events"
 
 class ParseEventFn(beam.DoFn):
+    """Parses incoming Pub/Sub messages."""
     def process(self, element):
         try:
             data = json.loads(element.decode('utf-8'))
@@ -20,31 +23,45 @@ class ParseEventFn(beam.DoFn):
                 "timestamp": data.get("timestamp")
             }
         except Exception as e:
-            logging.error(f"Failed to process element: {element} | Error: {e}")
-
+            print(f"Failed to parse message: {element} | Error: {e}")
 
 def run():
-    """Runs the Apache Beam pipeline."""
-    pipeline_options = PipelineOptions(
-        streaming=True,  # Enables streaming mode
-        project="scalable-streaming-analytics",
-        region="us-central1",
-        temp_location="gs://scalable-streaming-analytics-dataflow/tmp",
-        runner="DataflowRunner"
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input_topic', required=True)
+    args, pipeline_args = parser.parse_known_args()
+
+    options = PipelineOptions(pipeline_args)
+    standard_options = options.view_as(StandardOptions)
+    standard_options.streaming = True
+
+
+    p = beam.Pipeline(options=options)
+
+    # Use the input_topic from parsed args
+    topic_path = args.input_topic
+
+    (
+        p
+        | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(topic=topic_path)
+        | "Parse events" >> beam.ParDo(ParseEventFn())
+        | "Write to BigQuery" >> beam.io.WriteToBigQuery(
+            BQ_TABLE,
+            schema={
+                "fields": [
+                    {"name": "user_id", "type": "INTEGER", "mode": "NULLABLE"},
+                    {"name": "event", "type": "STRING", "mode": "NULLABLE"},
+                    {"name": "content_id", "type": "STRING", "mode": "NULLABLE"},
+                    {"name": "timestamp", "type": "FLOAT", "mode": "NULLABLE"},
+                ]
+            },
+            write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND,
+            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
+        )
     )
 
-    with beam.Pipeline(options=pipeline_options) as p:
-        (
-            p
-            | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(topic=TOPIC)
-            | "Parse JSON" >> beam.ParDo(ParseEventFn())
-            | "Write to BigQuery" >> beam.io.WriteToBigQuery(
-                BQ_TABLE,
-                schema="user_id:STRING, content_id:STRING, event_type:STRING, event_time:TIMESTAMP",
-                create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
-                write_disposition=beam.io.BigQueryDisposition.WRITE_APPEND
-            )
-        )
+    result = p.run()
+    result.wait_until_finish()
+
 
 if __name__ == "__main__":
     run()
