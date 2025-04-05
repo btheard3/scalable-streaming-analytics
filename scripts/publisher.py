@@ -6,7 +6,7 @@ from google.cloud import pubsub_v1
 
 # --- CONFIGURATION ---
 PROJECT_ID = "scalable-streaming-analytics"
-TOPIC_ID = "streaming-events-topic"  # Confirm this matches your Dataflow input topic
+TOPIC_ID = "streaming-events"  # Confirm this matches your Dataflow input topic
 NUM_MESSAGES = 20  # Number of events to send
 DELAY_BETWEEN_MESSAGES = 1  # seconds
 
