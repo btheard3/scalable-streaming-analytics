@@ -31,5 +31,5 @@ with DAG("bigquery_ml_training",
         location="US",  # Ensure correct location
         gcp_conn_id="google_cloud_default",
         dag=dag,
-    )
+    ) 
 
