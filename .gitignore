@@ -71,4 +71,28 @@ __pycache__/
 *.h5
 
 google-chrome-stable_current_amd64.deb
+docker-compose.yml
+
+.secrets/
+.env
+
+.env
+.secrets/
+*.pyc
+__pycache__/
+.ipynb_checkpoints/
+*.db
+
+.venv/
+__pycache__/
+*.pyc
+.secrets/
+.env
+airflow/airflow.db
+
+.venv/
+.env
+__pycache__/
+.secrets/
+airflow.db
 

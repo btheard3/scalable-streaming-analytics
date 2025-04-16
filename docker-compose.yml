@@ -1,17 +1,24 @@
 version: "3.8"
 
 services:
-  airflow:
+  airflow-jupyter:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: airflow
+    container_name: airflow-jupyter
     restart: always
-    ports:
-      - "8080:8080" # Airflow UI
+    env_file:
+      - .env
     volumes:
-      - .:/app
-    environment:
-      AIRFLOW__CORE__EXECUTOR: SequentialExecutor
-      AIRFLOW__CORE__FERNET_KEY: 1uXNlUfK6wQLYxv_ylZM2TnPc62x2zBvL8-OUzJlOoI=
-      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      - ./airflow/dags:/app/airflow/dags
+      - ./airflow/config:/app/airflow/config
+      - ./notebooks:/app/notebooks
+      - ./.secrets/gcp-key.json:/app/.secrets/gcp-key.json:ro
+    ports:
+      - "8080:8080" # Airflow Web UI
+      - "8888:8888" # JupyterLab
+    command: >
+      bash -c "airflow db init &&
+               airflow webserver & 
+               airflow scheduler & 
+               jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser"
