@@ -1,24 +1,14 @@
-version: "3.8"
-
 services:
   airflow-jupyter:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     container_name: airflow-jupyter
-    restart: always
-    env_file:
-      - .env
-    volumes:
-      - ./airflow/dags:/app/airflow/dags
-      - ./airflow/config:/app/airflow/config
-      - ./notebooks:/app/notebooks
-      - ./.secrets/gcp-key.json:/app/.secrets/gcp-key.json:ro
     ports:
-      - "8080:8080" # Airflow Web UI
+      - "8080:8080" # Airflow UI
       - "8888:8888" # JupyterLab
-    command: >
-      bash -c "airflow db init &&
-               airflow webserver & 
-               airflow scheduler & 
-               jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser"
+    volumes:
+      - ./airflow:/app/airflow
+      - ./notebooks:/app/notebooks
+      - ./.secrets/gcp-key.json:/app/.secrets/gcp-key.json
+    environment:
+      - AIRFLOW_HOME=/app/airflow
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/.secrets/gcp-key.json

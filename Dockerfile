@@ -1,13 +1,11 @@
-# Use Python 3.10 base image
+# Use lightweight Python image
 FROM python:3.10-slim
 
-# Set working directory
+# Set environment variables
+ENV AIRFLOW_HOME=/app/airflow
 WORKDIR /app
 
-# Set environment variable for Airflow home
-ENV AIRFLOW_HOME=/app/airflow
-
-# Install system dependencies
+# Install system-level dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     curl \
@@ -20,40 +18,36 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     vim \
     tzdata \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements file
+# Copy files
 COPY requirements.txt .
-
-# Install project Python dependencies
-RUN pip install --upgrade pip setuptools wheel && \
-    pip install --no-cache-dir -r requirements.txt
-
-# Install Apache Airflow separately with constraints
-ENV AIRFLOW_VERSION=2.7.3
-ENV CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-3.10.txt"
-RUN pip install "apache-airflow[celery,postgres,async,fab]==${AIRFLOW_VERSION}" --constraint "${CONSTRAINT_URL}"
-
-# Install JupyterLab explicitly
-RUN pip install jupyterlab
-
-# Create required Airflow folders
-RUN mkdir -p $AIRFLOW_HOME/dags $AIRFLOW_HOME/logs $AIRFLOW_HOME/plugins
-
-# Copy DAGs and notebooks
-COPY airflow/dags/ $AIRFLOW_HOME/dags/
+COPY airflow/ /app/airflow/
 COPY notebooks/ /app/notebooks/
+COPY .secrets/gcp-key.json /app/.secrets/gcp-key.json
 
-# Set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV GOOGLE_APPLICATION_CREDENTIALS=/app/.secrets/gcp-key.json
+# Install Python packages
+RUN pip install --upgrade pip setuptools wheel \
+ && pip install --no-cache-dir -r requirements.txt \
+ && pip install apache-airflow==2.7.3 \
+               apache-airflow-providers-google \
+               apache-airflow-providers-postgres \
+               jupyterlab
+RUN pip install Flask-Session
 
-# Expose ports
+
+# Expose Jupyter and Airflow webserver ports
 EXPOSE 8080 8888
 
-# Default command
-CMD ["bash", "-c", "airflow db init && airflow scheduler & airflow webserver & jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser"]
+# Default command: starts both Jupyter and Airflow webserver/scheduler
+CMD jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' & \
+    airflow db init && \
+    airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin && \
+    airflow webserver --port 8080 & \
+    airflow scheduler
+
+
 
 
 

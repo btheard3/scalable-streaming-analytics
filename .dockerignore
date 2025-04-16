@@ -4,7 +4,6 @@ __pycache__/
 *.pyd
 *.db
 .env
-.secrets/
 .ipynb_checkpoints
 
 __pycache__/
@@ -14,5 +13,4 @@ __pycache__/
 *.swp
 .venv/
 .env
-.secrets/
 airflow.db
