@@ -3,11 +3,11 @@ services:
     build: .
     container_name: airflow-jupyter
     ports:
-      - "8888:8888"
       - "8080:8080"
+      - "8888:8888"
     volumes:
-      - ./notebooks:/app/notebooks
       - ./airflow:/app/airflow
-      - ./.secrets/gcp-key.json:/app/.secrets/gcp-key.json
+      - ./notebooks:/app/notebooks
+      - ./.secrets:/app/.secrets
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/.secrets/gcp-key.json
